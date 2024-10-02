@@ -1,0 +1,7 @@
+az login --service-principal --username fea3c29d-375e-45d2-9914-5622da866fdf --password NQu8Q~q03APH25mxEvTvasXEGvbBsGhA6rFGMcoR --tenant f689cf06-1883-4e05-a677-718074c6f04d
+{
+  "appId": "fea3c29d-375e-45d2-9914-5622da866fdf",
+  "displayName": "azure-cli-2024-09-03-12-15-42",
+  "password": "NQu8Q~q03APH25mxEvTvasXEGvbBsGhA6rFGMcoR",
+  "tenant": "f689cf06-1883-4e05-a677-718074c6f04d"
+}

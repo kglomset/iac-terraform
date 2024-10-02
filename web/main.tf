@@ -14,13 +14,13 @@ provider "azurerm" {
 }
 
 resource "random_string" "random_string" {
-  length = 8
+  length  = 8
   special = false
-  upper = false
+  upper   = false
 }
 
 resource "azurerm_resource_group" "rg_web" {
-  name = var.rg_name 
+  name     = var.rg_name
   location = var.location
 }
 
@@ -37,12 +37,12 @@ resource "azurerm_storage_account" "sa_web" {
 }
 
 resource "azurerm_storage_blob" "index_html" {
-  name = var.index_document
-  storage_account_name = azurerm_storage_account.sa_web.name
+  name                   = var.index_document
+  storage_account_name   = azurerm_storage_account.sa_web.name
   storage_container_name = "$web"
-  type = "Block"
-  content_type = "text/html"
-  source_content = var.source_content
+  type                   = "Block"
+  content_type           = "text/html"
+  source_content         = var.source_content
 }
 
 output "primary_web_endpoint" {
