@@ -1,16 +1,9 @@
-terraform {
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "4.3.0"
+locals {
+  workspaces_suffix = terraform.workspace == "default" ? "" : "${terraform.workspace}"
 
-    }
-  }
-}
-
-provider "azurerm" {
-  subscription_id = "70438f0b-03a6-455f-a559-dd257af223a9"
-  features {}
+  rg_name = terraform.workspace == "default" ? "${var.rg_name}" : "${var.rg_name}-${local.workspaces_suffix}"
+  sa_name = terraform.workspace == "default" ? "${var.sa_name}" : "${var.sa_name}${local.workspaces_suffix}"
+  web_suffix = "<h1>${terraform.workspace}</h1>"
 }
 
 resource "random_string" "random_string" {
@@ -42,7 +35,7 @@ resource "azurerm_storage_blob" "index_html" {
   storage_container_name = "$web"
   type                   = "Block"
   content_type           = "text/html"
-  source_content         = var.source_content
+  source_content         = "${var.source_content}${local.web_suffix}"
 }
 
 output "primary_web_endpoint" {
