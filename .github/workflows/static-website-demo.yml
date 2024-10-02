@@ -1,0 +1,46 @@
+# Basic workflow for getting started with actions
+
+name: web
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull requests
+  push:
+    paths:
+      - 'iac-terraform/39-static-website/**'
+
+  workflow_dispatch:
+
+jobs:
+
+  resourcegroups:
+
+    runs-on: ubuntu-latest
+
+    name: 'web'
+    env:
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID}}
+      WORKING_DIR: ./iac-terraform/39-static-website
+
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: 'Terraform init'
+        id: init
+        run: terraform init
+        working-directory: ${{ env.WORKING_DIR}}
+
+      - name: 'Terraform plan'
+        id: plan
+        run: terraform plan
+        working-directory: ${{ env.WORKING_DIR}}
+
+      - name: 'Terraform apply'
+        id: apply
+        run: terraform apply -autp-approve
+        working-directory: ${{ env.WORKING_DIR }}
+        
