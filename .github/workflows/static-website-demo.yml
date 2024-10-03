@@ -40,10 +40,14 @@ jobs:
       
       - name: 'Check last commit message'
         id: commit
-        run: echo "::set-output name=message::${git log --format=%B -n 1}"
-      - name: 'Conditionally run Terraform action'
         run: |
-          if [[ "${{ steps.commit.outputs.message}}" == *"destroy"* ]]; then
+          git_message=$(git log --format=%B -n 1)
+          echo "message=$git_message" >> $GITHUB_ENV
+
+      - name: 'Conditionally run Terraform action'
+        if: contains(env.message, 'destroy')
+        run: |
+          echo "Destroying resources because commit message contains 'destroy'" then
             terraform destroy -auto-approve
           else
             terraform apply -auto-approve
