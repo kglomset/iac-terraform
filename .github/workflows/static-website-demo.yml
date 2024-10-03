@@ -42,11 +42,11 @@ jobs:
         id: commit
         run: |
           git_message=$(git log --format=%B -n 1)
-          echo "message=$git_message" >> $GITHUB_ENV
+          echo "GIT_COMMIT_MESSAGE=$git_message" >> $GITHUB_ENV
 
       - name: 'Conditionally run Terraform action'
         run: |
-          if [[ "$GITHUB_ENV" == *"destroy"* ]]; then
+          if [[ "${{ env.GIT_COMMIT_MESSAGE }}" == *"destroy"* ]]; then
             echo "Destroying resources because commit message contains 'destroy'"
             terraform destroy -auto-approve
           else
