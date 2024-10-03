@@ -7,7 +7,7 @@ on:
   # Triggers the workflow on push or pull requests
   push:
     paths:
-      - 'iac-terraform/39-static-website/**'
+      - './39-static-website/**'
 
   workflow_dispatch:
 
@@ -23,7 +23,7 @@ jobs:
       ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID}}
-      WORKING_DIR: ./iac-terraform/39-static-website
+      WORKING_DIR: ./39-static-website
 
 
     steps:
