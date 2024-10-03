@@ -45,11 +45,12 @@ jobs:
           echo "message=$git_message" >> $GITHUB_ENV
 
       - name: 'Conditionally run Terraform action'
-        if: contains(env.message, 'destroy')
         run: |
-          echo "Destroying resources because commit message contains 'destroy'" then
+          if [[ "$GITHUB_ENV" == *"destroy"* ]]; then
+            echo "Destroying resources because commit message contains 'destroy'"
             terraform destroy -auto-approve
           else
+            echo "Applying resources"
             terraform apply -auto-approve
           fi
-        working-directory: ${{ env.WORKING_DIR}}
+        working-directory: ${{ env.WORKING_DIR }}
