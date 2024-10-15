@@ -30,7 +30,3 @@ locals {
   rg_name    = terraform.workspace == "default" ? "${var.rg_name}" : "${var.rg_name}-${local.workspaces_suffix}"
   sa_name    = terraform.workspace == "default" ? "${var.sa_name}" : "${var.sa_name}${local.workspaces_suffix}"
 }
-
-resource "random_password" "random_password" {
-  length = 16
-}
