@@ -8,7 +8,7 @@ terraform {
   }
   backend "azurerm" {
     resource_group_name  = "rg-backend-tfstate-kwg"
-    storage_account_name = "change this"
+    storage_account_name = "sabackendkwgzs4qm2ecsg"
     container_name       = "tfstate"
     key                  = "week40.terraform.tfstate"
   }
