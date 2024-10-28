@@ -1,6 +1,6 @@
 module "rg_ecom_platform" {
-  source = "../resource_group"
-  rg_name = var.rg_name
+  source   = "../resource_group"
+  rg_name  = var.rg_name
   location = var.location
 }
 
