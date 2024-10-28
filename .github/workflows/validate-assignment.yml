@@ -1,0 +1,74 @@
+# This is a workflow to review and validate the Terraform configuration
+
+# For infrastructure configuration it should be created branches
+# (remember good naming convention and life cycle) that should undergo code 
+# reviews (terraform fmt, terraform validate and tflint/tfsec) before they are 
+# merged into the environment branches (e.g., dev, staging, prod), which providing
+# a layer of quality assurance.
+
+name: Review Infrastructure
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push
+  push:
+    branches-ignore:
+      - 'dev'
+      - 'stage'
+      - 'prod'
+    paths:
+      - 'kristiwg-oppg2/**'
+
+
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "Review"
+  terraform:
+    name: 'Review and merge to dev'
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    
+    env:
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      WORKING_DIR: ./kristiwg-oppg2
+      
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+
+      # Runs a single command using the runners shell
+      - name: Terraform fmt
+        id: fmt
+        run: terraform fmt -recursive
+        working-directory: ${{ env.WORKING_DIR }}  
+
+      # Runs a single command using the runners shell
+      - name: Terraform init
+        id: init
+        run: terraform init
+        working-directory: ${{ env.WORKING_DIR }}          
+
+      - name: Terraform validate
+        id: validate
+        run: terraform validate
+        working-directory: ${{ env.WORKING_DIR }}
+
+      - name: Terraform tfsec
+        id: tfsec
+        run: terraform tfsec
+        working-directory: ${{ env.WORKING_DIR }}
+
+      # Automatically mergo to dev if all cheks pass
+      - name: Merge to dev
+        if: ${{success()}}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout dev
+          git merge --no-ff ${{ github.ref_name }}
+          git push origin dev
