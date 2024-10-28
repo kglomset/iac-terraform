@@ -6,7 +6,7 @@
 # merged into the environment branches (e.g., dev, staging, prod), which providing
 # a layer of quality assurance.
 
-name: Review Infrastructure
+name: Review Infrastructure Assignment 2
 
 # Controls when the workflow will run
 on:
