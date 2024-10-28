@@ -60,8 +60,7 @@ jobs:
 
       - name: Terraform tfsec
         id: tfsec
-        run: tfsec
-        working-directory: ${{ env.WORKING_DIR }}
+        run: tfsec ${{ env.WORKING_DIR }}
 
       # Automatically mergo to dev if all cheks pass
       - name: Merge to dev
