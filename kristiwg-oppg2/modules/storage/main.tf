@@ -11,7 +11,7 @@ resource "random_string" "sa_suffix" {
 }
 
 resource "azurerm_storage_account" "sa_ecom_platform" {
-  name                     = "${lower(var.sa_name)}${random_string.sa_suffix.result}" ## CorrecT?
+  name                     = "${lower(var.sa_name)}${random_string.sa_suffix.result}" ## Correct? Her burde vel locals være brukt
   resource_group_name      = module.resource_group.rg_name
   location                 = module.rg_ecom_platform.location
   account_tier             = "Standard"
