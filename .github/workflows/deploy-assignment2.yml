@@ -1,6 +1,6 @@
 # Basic workflow for getting started with actions
 
-name: Terraform CI/CD
+name: Deploy stage/prod
 
 # Controls when the workflow will run
 on:
