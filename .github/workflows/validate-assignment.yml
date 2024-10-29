@@ -72,20 +72,29 @@ jobs:
         # Space separated args specified here will be added during tfsec execution.
         # (eg. --force-all-dirs --verbose)
 
-      - name: Merge to Dev
+            - name: Merge to Dev
         if: ${{ success() }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          # Configure git to use the GitHub Actions bot
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          # Check if dev branch exists remotely
+
+          # Fetch all branches and check if the dev branch exists
+          git fetch origin
           if git ls-remote --heads origin dev | grep -q "refs/heads/dev"; then
-            echo "Dev branch exists."
+            echo "Dev branch exists. Checking out dev."
             git checkout dev
           else
             echo "Dev branch does not exist. Creating dev branch."
             git checkout -b dev
             git push origin dev
           fi
-          # Merge the feature branch into dev
+
+          # Merge the current branch into dev
           git merge --no-ff ${{ github.ref_name }}
+
+          # Push changes to the remote dev branch
           git push origin dev
+
