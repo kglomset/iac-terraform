@@ -6,7 +6,7 @@
 # merged into the environment branches (e.g., dev, staging, prod), which providing
 # a layer of quality assurance.
 
-name: Review Infrastructure
+name: Review Infrastructure Assignment 2
 
 # Controls when the workflow will run
 on:
@@ -24,7 +24,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "Review"
-  terraform:
+   terraform:
     name: 'Review and merge to dev'
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
