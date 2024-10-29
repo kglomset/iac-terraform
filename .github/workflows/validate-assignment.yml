@@ -72,7 +72,7 @@ jobs:
         # Space separated args specified here will be added during tfsec execution.
         # (eg. --force-all-dirs --verbose)
 
-            - name: Merge to Dev
+      - name: Merge to Dev
         if: ${{ success() }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
