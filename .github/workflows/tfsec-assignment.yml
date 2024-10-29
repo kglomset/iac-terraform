@@ -5,7 +5,7 @@ name: Terraform Security Check
 # Controls when the workflow will run
 on:
   workflow_run:
-    workflows: ["validate-assignment"]
+    workflows: ["Validate Infrastructure Assignment 2"]
     types:
       - completed
   workflow_dispatch:
