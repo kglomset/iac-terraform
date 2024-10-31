@@ -72,7 +72,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4.1.1
 
-      - name: Merge dev to stage
+      - name: Merge stage to prod
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -90,7 +90,19 @@ jobs:
           # Merge stage into prod and push
           git merge --no-ff stage
           git push "https://${GITHUB_TOKEN}@github.com/${{ github.repository }}.git" prod
-      
+
+      - name: Manual Approval
+        uses: trstringer/manual-approval@v1
+        with:
+          secret: ${{ secrets.GITHUB_TOKEN }}
+          approvers: kglomset@gmail.com
+          minimum-approvals: 1
+          issue-title: "Approval required for Production Deployment"
+          issue-body: "Please review and approve the changes for production deployment."
+          exclude-workflow-initiator-as-approver: false
+          additional-approved-words: ''
+          additional-denied-words: ''
+            
       - name: Terraform init
         run: terraform init
         working-directory: ${{ env.WORKING_DIR }}
