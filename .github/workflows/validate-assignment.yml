@@ -72,7 +72,7 @@ jobs:
         # Space separated args specified here will be added during tfsec execution.
         # (eg. --force-all-dirs --verbose)
 
-            - name: Merge to Dev
+      - name: Merge to Dev
         if: ${{ success() }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -89,11 +89,15 @@ jobs:
           else
             echo "Dev branch does not exist. Creating dev branch."
             git checkout -b dev
-            git push origin dev
+            git push "https://${GITHUB_TOKEN}@github.com/${{ github.repository }}.git" dev
           fi
 
           # Merge the current branch into dev
           git merge --no-ff ${{ github.ref_name }}
+
+          # Push changes to the remote dev branch
+          git push "https://${GITHUB_TOKEN}@github.com/${{ github.repository }}.git" dev
+
 
           # Push changes to the remote dev branch
           git push origin dev
