@@ -98,3 +98,6 @@ jobs:
           # Push changes to the remote dev branch
           git push origin dev
 
+          # Push changes to the remote dev branch
+          git push origin dev
+
