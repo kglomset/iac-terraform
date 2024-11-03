@@ -53,7 +53,7 @@ jobs:
         working-directory: ${{ env.WORKING_DIR}}
 
       - name: 'Terraform apply stage'
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve -var-file=terraform.stage.tfvars
         working-directory: ${{ env.WORKING_DIR}}
   on-failure:
     runs-on: ubuntu-latest
@@ -112,5 +112,5 @@ jobs:
         working-directory: ${{ env.WORKING_DIR }}
       
       - name: Terraform apply prod
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve -var-file=terraform.prod.tfvars
         working-directory: ${{ env.WORKING_DIR }}
