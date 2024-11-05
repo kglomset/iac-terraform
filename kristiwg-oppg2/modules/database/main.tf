@@ -18,10 +18,6 @@ resource "azurerm_mssql_database" "ecom_database" {
   sku_name     = "S0"
   enclave_type = "VBS"
 
-  tags = {
-    foo = "Do something about these effing tags"
-  }
-
   # prevent the possibility of accidental data loss
   lifecycle {
     prevent_destroy = true
