@@ -10,6 +10,7 @@ resource "azurerm_storage_account" "sa_ecom_platform" {
   location                 = var.location
   account_tier             = "Standard"
   account_replication_type = "LRS"
+  min_tls_version          = "TLS1_2"
 }
 
 resource "azurerm_storage_container" "ecom_storage_container" {

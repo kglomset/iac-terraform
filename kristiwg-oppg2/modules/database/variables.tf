@@ -27,3 +27,13 @@ variable "server_admin_pwd" {
   type        = string
   description = "Administrator login password for MySQL server"
 }
+
+variable "storage_endpoint" {
+  type = string
+  description = "Endpoint of storage blob"
+}
+
+variable "sa_prim_access_key" {
+  type = string
+  description = "Primary access key of the storage account"
+}

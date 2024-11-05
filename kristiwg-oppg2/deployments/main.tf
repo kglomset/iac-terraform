@@ -65,6 +65,8 @@ module "database" {
   server_name = module.global.local_server_name
   server_admin_pwd = var.server_admin_pwd
   server_admin_username = var.server_admin_username
+  storage_endpoint = module.storage.storage_endpoint
+  sa_prim_access_key = module.storage.sa_primary_access_key
 }
 
 module "storage" {
