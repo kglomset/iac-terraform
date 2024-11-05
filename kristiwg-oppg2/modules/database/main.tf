@@ -19,7 +19,7 @@ resource "azurerm_mssql_database" "ecom_database" {
   enclave_type = "VBS"
 
   tags = {
-    foo = "bar"
+    foo = "Do something about these tags"
   }
 
   # prevent the possibility of accidental data loss
