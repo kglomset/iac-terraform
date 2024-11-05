@@ -14,7 +14,7 @@ on:
   push:
     branches-ignore:
       - 'dev'
-      - 'stage'
+      - 'staging'
       - 'prod'
     paths:
       - 'kristiwg-oppg2/**'
