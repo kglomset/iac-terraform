@@ -25,35 +25,35 @@ jobs:
         uses: actions/checkout@v3
 
          # Merge dev into stage
-      - name: Merge dev to stage
+      - name: Merge dev to staging
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Fetch all branches and check if the stage branch exists
           git fetch origin
           if git ls-remote --heads origin stage | grep -q "refs/heads/stage"; then
-            echo "Stage branch exists. Checking out stage."
-            git checkout stage
+            echo "Stage branch exists. Checking out staging."
+            git checkout staging
           else
-            echo "Stage branch does not exist. Creating stage branch."
-            git checkout -b stage
-            git push "https://${GITHUB_TOKEN}@github.com/${{ github.repository }}.git" stage
+            echo "Staging branch does not exist. Creating stage branch."
+            git checkout -b staging
+            git push "https://${GITHUB_TOKEN}@github.com/${{ github.repository }}.git" staging
           fi
 
-          # Merge dev into stage and push
+          # Merge dev into staging and push
           git merge --no-ff dev
-          git push "https://${GITHUB_TOKEN}@github.com/${{ github.repository }}.git" stage
+          git push "https://${GITHUB_TOKEN}@github.com/${{ github.repository }}.git" staging
 
       - name: 'Terraform init'
         run: terraform init
         working-directory: ${{ env.WORKING_DIR}}
 
-      - name: 'Terraform workspace select or create stage'
-        run: terraform workspace select stage || terraform workspace new stage
+      - name: 'Terraform workspace select or create staging'
+        run: terraform workspace select staging || terraform workspace new staging
         working-directory: ${{ env.WORKING_DIR}}
 
-      - name: 'Terraform apply stage'
-        run: terraform apply -auto-approve -var-file=terraform.stage.tfvars
+      - name: 'Terraform apply staging'
+        run: terraform apply -auto-approve -var-file=terraform.stageing.tfvars
         working-directory: ${{ env.WORKING_DIR}}
   on-failure:
     runs-on: ubuntu-latest
@@ -76,7 +76,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Fetch all branches and check if the stage branch exists
+          # Fetch all branches and check if the staging branch exists
           git fetch origin
           if git ls-remote --heads origin prod | grep -q "refs/heads/prod"; then
             echo "Prod branch exists. Checking out prod."
