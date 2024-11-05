@@ -33,5 +33,5 @@ resource "azurerm_mssql_server_extended_auditing_policy" "ecom_server_auditing_p
   storage_endpoint                        = var.storage_endpoint
   storage_account_access_key              = var.sa_prim_access_key
   storage_account_access_key_is_secondary = false
-  retention_in_days                       = 6
+  retention_in_days                       = 100
 }
