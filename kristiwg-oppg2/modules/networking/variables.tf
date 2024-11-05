@@ -13,7 +13,7 @@ variable "location" {
   description = "The geographical location of the infrastructure"
 }
 
-variable "ip_lb_name" {
+variable "ip_name" {
   type        = string
   description = "Name of the public IP for load balancer"
 }
