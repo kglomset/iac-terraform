@@ -2,8 +2,7 @@ name: Deploy to Environment
 
 # Controls when the workflow will run
 on:
-  pull_request:
-    types: [closed]
+  push:
     branches:
       - dev
       - staging
@@ -17,45 +16,65 @@ env:
   WORKING_DIR: ./kristiwg-oppg2
 
 jobs:
-  deploy:
-    if: ${{ github.event.pull_request.merged == true }} # Only proceed if the PR was merged
+  deploy-dev:
+    if: ${{ github.ref == 'refs/heads/dev' }}
     runs-on: ubuntu-latest
+    name: Deploy to Dev
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Set Environment
-        id: set-env
-        run: |
-          if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
-            echo "env=dev" >> $GITHUB_ENV
-            echo "tfvars_file=terraform.dev.tfvars" >> $GITHUB_ENV
-          elif [[ "${{ github.ref }}" == "refs/heads/staging" ]]; then
-            echo "env=staging" >> $GITHUB_ENV
-            echo "tfvars_file=terraform.staging.tfvars" >> $GITHUB_ENV
-          elif [[ "${{ github.ref }}" == "refs/heads/prod" ]]; then
-            echo "env=prod" >> $GITHUB_ENV
-            echo "tfvars_file=terraform.prod.tfvars" >> $GITHUB_ENV
-          fi
-
-      - name: Terraform init
+      - name: Terraform init for Dev
         run: terraform init
         working-directory: ${{ env.WORKING_DIR }}
 
-      - name: Terraform workspace select or create
-        run: terraform workspace select ${{ env.env }} || terraform workspace new ${{ env.env }}
+      - name: Select or create Dev workspace
+        run: terraform workspace select dev || terraform workspace new dev
         working-directory: ${{ env.WORKING_DIR }}
 
-      - name: Terraform apply
-        run: terraform apply -auto-approve -var-file=${{ env.tfvars_file }}
+      - name: Terraform apply for Dev
+        run: terraform apply -auto-approve -var-file=terraform.dev.tfvars
         working-directory: ${{ env.WORKING_DIR }}
 
-  # Production approval
-  production:
-    if: ${{ github.event.pull_request.merged == true && github.ref == 'refs/heads/prod' }}
-    needs: deploy
+  deploy-staging:
+    if: ${{ github.ref == 'refs/heads/staging' }}
     runs-on: ubuntu-latest
+    name: Deploy to Staging
+
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Terraform init for Staging
+        run: terraform init
+        working-directory: ${{ env.WORKING_DIR }}
+
+      - name: Select or create Staging workspace
+        run: terraform workspace select staging || terraform workspace new staging
+        working-directory: ${{ env.WORKING_DIR }}
+
+      - name: Terraform apply for Staging
+        run: terraform apply -auto-approve -var-file=terraform.staging.tfvars
+        working-directory: ${{ env.WORKING_DIR }}
+
+  deploy-prod:
+    if: ${{ github.ref == 'refs/heads/prod' }}
+    runs-on: ubuntu-latest
+    name: Deploy to Production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Terraform init for Production
+        run: terraform init
+        working-directory: ${{ env.WORKING_DIR }}
+
+      - name: Select or create Production workspace
+        run: terraform workspace select prod || terraform workspace new prod
+        working-directory: ${{ env.WORKING_DIR }}
+
       - name: Manual Approval
         uses: trstringer/manual-approval@v1
         with:
@@ -64,3 +83,7 @@ jobs:
           minimum-approvals: 1
           issue-title: "Approval required for Production Deployment"
           issue-body: "Please review and approve the changes for production deployment."
+
+      - name: Terraform apply for Production
+        run: terraform apply -auto-approve -var-file=terraform.prod.tfvars
+        working-directory: ${{ env.WORKING_DIR }}
