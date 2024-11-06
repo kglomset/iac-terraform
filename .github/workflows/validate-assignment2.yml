@@ -86,5 +86,5 @@ jobs:
           fi
 
           # Merge current feature branch into dev
-          git merge ${{github.ref}} --no-ff --allow-unrelated-hisdtories -m "Merging ${{github.ref}} into dev"
+          git merge ${{github.ref}} --no-ff --allow-unrelated-histories -m "Merging ${{github.ref}} into dev"
           git push origin dev
