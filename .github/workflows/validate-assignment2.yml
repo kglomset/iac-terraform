@@ -4,10 +4,6 @@ name: Validate And Review Infrastructure Assignment 2
 on:
   # Triggers the workflow on push
   push:
-    branches-ignore:
-      - 'dev'
-      - 'staging'
-      - 'prod'
     paths:
       - 'kristiwg-oppg2/**'
 
