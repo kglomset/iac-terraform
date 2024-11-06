@@ -96,5 +96,5 @@ jobs:
 
           # Merge feature branch into dev
           git checkout dev
-          git merge ${{github.ref_name}} --no-ff -m "Merging feature branch ${{github.ref_name}} into dev"
+          git merge ${{github.ref_name}} --no-ff --allow-unrelated-histories -m "Merging feature branch ${{github.ref_name}} into dev"
           git push origin dev
