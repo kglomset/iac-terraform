@@ -20,7 +20,7 @@ provider "azurerm" {
   }
 }
 
-# Just added soime comments for the test
+# Just added soime comments for the testaEF<DS
 module "global" {
     source = "../global"
   rg_name           = var.rg_name
