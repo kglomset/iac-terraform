@@ -71,7 +71,7 @@ jobs:
           git config user.email github-actions@github.com
           git push origin HEAD:${{github.ref_name}} || echo "Remote feature branch already exists."
       
-      - name: Ensure dev exists
+      - name: Ensure Dev Branch Exists
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -84,16 +84,14 @@ jobs:
             git commit --allow-empty -m "Initial commit for dev branch"
             git push origin dev
           fi
-        
+
       - name: Create Pull Request to Dev
         uses: peter-evans/create-pull-request@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           base: dev
-          head: ${{ github.ref_name }}
           title: "Merge feature branch ${{ github.ref_name }} into dev"
           body: "Automatically created PR to merge feature branch ${{ github.ref_name }} into dev."
-          branch: dev
 
       - name: Ensure staging exists
         env:
@@ -117,7 +115,6 @@ jobs:
           head: ${{ github.ref_name }}
           title: "Merge feature branch ${{ github.ref_name }} into staging"
           body: "Automatically created PR to merge feature branch ${{ github.ref_name }} into dev."
-          branch: staging
 
       - name: Ensure prod exists
         env:
@@ -141,4 +138,3 @@ jobs:
           head: ${{ github.ref_name }}
           title: "Merge feature branch ${{ github.ref_name }} into prod"
           body: "Automatically created PR to merge feature branch ${{ github.ref_name }} into prod."
-          branch: prod
