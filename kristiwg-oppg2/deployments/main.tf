@@ -20,7 +20,7 @@ provider "azurerm" {
   }
 }
 
-
+# Just added soime comments for the test
 module "global" {
     source = "../global"
   rg_name           = var.rg_name
