@@ -72,17 +72,18 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          # Fetch all branches
+          git fetch origin
+          
           # Check if dev branch exists
           if git ls-remote --exit-code --heads origin dev; then
-            echo "Dev branch exists. Checking out dev."
+            echo "Dev branch exists. Updating local dev branch."
+            git checkout -b dev origin/dev
+          else
+            echo "Dev branch does not exist, creating new dev branch"
             git checkout -b dev
             git push origin dev
-          else
-            git fetch origin dev:dev
           fi
-
-          # Checkout dev
-          git checkout dev
 
           # Merge current feature branch into dev
           git merge ${{github.ref}} --no-ff -m "Merging ${{github.ref}} into dev"
