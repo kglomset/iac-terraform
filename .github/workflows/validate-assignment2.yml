@@ -70,7 +70,21 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           git push origin HEAD:${{github.ref_name}} || echo "Remote feature branch already exists."
-
+      
+      - name: Ensure dev exists
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git fetch origin
+          if git ls-remote --exit-code --heads origin dev; then
+            echo "Dev branch exists on remote."
+          else
+            echo "Creating dev branch on remote."
+            git checkout --orphan dev
+            git commit --allow-empty -m "Initial commit for dev branch"
+            git push origin dev
+          fi
+        
       - name: Create Pull Request to Dev
         uses: peter-evans/create-pull-request@v4
         with:
@@ -81,6 +95,20 @@ jobs:
           body: "Automatically created PR to merge feature branch ${{ github.ref_name }} into dev."
           branch: dev
 
+      - name: Ensure staging exists
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git fetch origin
+          if git ls-remote --exit-code --heads origin staging; then
+            echo "Staging branch exists on remote."
+          else
+            echo "Creating staging branch on remote."
+            git checkout --orphan staging
+            git commit --allow-empty -m "Initial commit for staging branch"
+            git push origin staging
+          fi
+
       - name: Create Pull Request to Staging
         uses: peter-evans/create-pull-request@v4
         with:
@@ -90,6 +118,20 @@ jobs:
           title: "Merge feature branch ${{ github.ref_name }} into staging"
           body: "Automatically created PR to merge feature branch ${{ github.ref_name }} into dev."
           branch: staging
+
+      - name: Ensure prod exists
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git fetch origin
+          if git ls-remote --exit-code --heads origin prod; then
+            echo "Prod branch exists on remote."
+          else
+            echo "Creating prod branch on remote."
+            git checkout --orphan prod
+            git commit --allow-empty -m "Initial commit for prod branch"
+            git push origin prod
+          fi
 
       - name: Create Pull Request to Prod
         uses: peter-evans/create-pull-request@v4
