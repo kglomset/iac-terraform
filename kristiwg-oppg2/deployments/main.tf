@@ -20,7 +20,7 @@ provider "azurerm" {
   }
 }
 
-# Just added soime com
+# Just added soime comasd
 module "global" {
     source = "../global"
   rg_name           = var.rg_name
