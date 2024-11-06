@@ -71,30 +71,32 @@ jobs:
           git config user.email github-actions@github.com
           git push origin HEAD:${{github.ref_name}} || echo "Remote feature branch already exists."
 
-      - name: Merge to Dev
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          # Set up Git configuration
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
+      - name: Create Pull Request to Dev
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: dev
+          head: ${{ github.ref_name }}
+          title: "Merge feature branch ${{ github.ref_name }} into dev"
+          body: "Automatically created PR to merge feature branch ${{ github.ref_name }} into dev."
+          branch: dev
 
-          # Fetch all branches
-          git fetch origin
+      - name: Create Pull Request to Staging
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: staging
+          head: ${{ github.ref_name }}
+          title: "Merge feature branch ${{ github.ref_name }} into staging"
+          body: "Automatically created PR to merge feature branch ${{ github.ref_name }} into dev."
+          branch: staging
 
-          # Check if the dev branch exists
-          if git ls-remote --exit-code --heads origin dev; then
-            echo "Dev branch exists. Checking it out."
-            git checkout dev
-            git pull origin dev
-          else
-            echo "Dev branch does not exist. Creating it."
-            git checkout --orphan dev
-            git commit --allow-empty -m "Initial commit for dev branch"
-            git push origin dev
-          fi
-
-          # Merge feature branch into dev
-          git checkout dev
-          git merge ${{github.ref_name}} --no-ff --allow-unrelated-histories -m "Merging feature branch ${{github.ref_name}} into dev"
-          git push origin dev
+      - name: Create Pull Request to Prod
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: prod
+          head: ${{ github.ref_name }}
+          title: "Merge feature branch ${{ github.ref_name }} into prod"
+          body: "Automatically created PR to merge feature branch ${{ github.ref_name }} into prod."
+          branch: prod
