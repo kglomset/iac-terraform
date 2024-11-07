@@ -34,7 +34,7 @@ jobs:
         working-directory: ${{ env.WORKING_DIR }}
 
       - name: Terraform apply for Dev
-        run: terraform apply -auto-approve -var-file=terraform.dev.tfvars
+        run: terraform apply -auto-approve
         working-directory: ${{ env.WORKING_DIR }}
 
   deploy-staging:
@@ -55,7 +55,7 @@ jobs:
         working-directory: ${{ env.WORKING_DIR }}
 
       - name: Terraform apply for Staging
-        run: terraform apply -auto-approve -var-file=terraform.staging.tfvars
+        run: terraform apply -auto-approve
         working-directory: ${{ env.WORKING_DIR }}
 
   deploy-prod:
@@ -85,5 +85,5 @@ jobs:
           issue-body: "Please review and approve the changes for production deployment."
 
       - name: Terraform apply for Production
-        run: terraform apply -auto-approve -var-file=terraform.prod.tfvars
+        run: terraform apply -auto-approve
         working-directory: ${{ env.WORKING_DIR }}
