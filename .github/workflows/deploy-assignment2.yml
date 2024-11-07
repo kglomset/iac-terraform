@@ -33,12 +33,10 @@ jobs:
         run: terraform workspace select dev || terraform workspace new dev
         working-directory: ${{ env.WORKING_DIR }}
 
-      - name: Terraform plan for Dev
-        run: terraform plan -out="main.tfplan" -var-file="terraform.dev.tfvars"
-        working-directory: ${{ env.WORKING_DIR }}
+
 
       - name: Terraform apply for Dev
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve -var-file="terraform.dev.tfvars"
         working-directory: ${{ env.WORKING_DIR }}
 
   deploy-staging:
