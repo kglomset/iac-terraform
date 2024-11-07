@@ -1,116 +1,89 @@
-# Basic workflow for getting started with actions
-
-name: Deploy stage/prod
+name: Deploy to Environment
 
 # Controls when the workflow will run
 on:
-  workflow_run:
-    workflows: ["Validate And Review Infrastructure Assignment 2"]
-    types:
-      - completed
+  push:
+    branches:
+      - dev
+      - staging
+      - prod
+
 env:
   ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
   ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
   ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID}}
-  WORKING_DIR: ./kristiwg-oppg2
+  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+  WORKING_DIR: ./kristiwg-oppg2/**
 
 jobs:
-  on-success:
+  deploy-dev:
+    if: ${{ github.ref == 'refs/heads/dev' }}
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    # Merge dev to stage/create stage and then follow through
+    name: Deploy to Dev
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-         # Merge dev into stage
-      - name: Merge dev to staging
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          # Fetch all branches and check if the stage branch exists
-          git fetch origin
-          if git ls-remote --heads origin stage | grep -q "refs/heads/stage"; then
-            echo "Stage branch exists. Checking out staging."
-            git checkout staging
-          else
-            echo "Staging branch does not exist. Creating stage branch."
-            git checkout -b staging
-            git push "https://${GITHUB_TOKEN}@github.com/${{ github.repository }}.git" staging
-          fi
-
-          # Merge dev into staging and push
-          git merge --no-ff dev
-          git push "https://${GITHUB_TOKEN}@github.com/${{ github.repository }}.git" staging
-
-      - name: 'Terraform init'
+      - name: Terraform init for Dev
         run: terraform init
-        working-directory: ${{ env.WORKING_DIR}}
+        working-directory: ${{ env.WORKING_DIR }}
 
-      - name: 'Terraform workspace select or create staging'
-        run: terraform workspace select staging || terraform workspace new staging
-        working-directory: ${{ env.WORKING_DIR}}
+      - name: Select or create Dev workspace
+        run: terraform workspace select dev || terraform workspace new dev
+        working-directory: ${{ env.WORKING_DIR }}
 
-      - name: 'Terraform apply staging'
-        run: terraform apply -auto-approve -var-file=terraform.stageing.tfvars
-        working-directory: ${{ env.WORKING_DIR}}
-  on-failure:
+      - name: Terraform apply for Dev
+        run: terraform apply -auto-approve -var-file=terraform.dev.tfvars
+        working-directory: ${{ env.WORKING_DIR }}
+
+  deploy-staging:
+    if: ${{ github.ref == 'refs/heads/staging' }}
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
-    steps:
-      - run: echo 'The triggering workflow failed'
-  
-  
-  prod:
-    needs: on-success
-    runs-on: ubuntu-latest
-    environment: 
-      name: production
-      # url: ${{ steps.get_web_endpoint.outputs.WEB_ENDPOINT }} # replace deploy_prod and web_url with actual output variables
+    name: Deploy to Staging
+
     steps:
       - name: Checkout
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v3
 
-      - name: Merge stage to prod
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          # Fetch all branches and check if the staging branch exists
-          git fetch origin
-          if git ls-remote --heads origin prod | grep -q "refs/heads/prod"; then
-            echo "Prod branch exists. Checking out prod."
-            git checkout prod
-          else
-            echo "Prod branch does not exist. Creating prod branch."
-            git checkout -b prod
-            git push "https://${GITHUB_TOKEN}@github.com/${{ github.repository }}.git" prod
-          fi
+      - name: Terraform init for Staging
+        run: terraform init
+        working-directory: ${{ env.WORKING_DIR }}
 
-          # Merge stage into prod and push
-          git merge --no-ff stage
-          git push "https://${GITHUB_TOKEN}@github.com/${{ github.repository }}.git" prod
+      - name: Select or create Staging workspace
+        run: terraform workspace select staging || terraform workspace new staging
+        working-directory: ${{ env.WORKING_DIR }}
+
+      - name: Terraform apply for Staging
+        run: terraform apply -auto-approve -var-file=terraform.staging.tfvars
+        working-directory: ${{ env.WORKING_DIR }}
+
+  deploy-prod:
+    if: ${{ github.ref == 'refs/heads/prod' }}
+    runs-on: ubuntu-latest
+    name: Deploy to Production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Terraform init for Production
+        run: terraform init
+        working-directory: ${{ env.WORKING_DIR }}
+
+      - name: Select or create Production workspace
+        run: terraform workspace select prod || terraform workspace new prod
+        working-directory: ${{ env.WORKING_DIR }}
 
       - name: Manual Approval
         uses: trstringer/manual-approval@v1
         with:
           secret: ${{ secrets.GITHUB_TOKEN }}
-          approvers: kglomset@gmail.com
+          approvers: 'kglomset@gmail.com'
           minimum-approvals: 1
           issue-title: "Approval required for Production Deployment"
           issue-body: "Please review and approve the changes for production deployment."
-          exclude-workflow-initiator-as-approver: false
-          additional-approved-words: ''
-          additional-denied-words: ''
-            
-      - name: Terraform init
-        run: terraform init
-        working-directory: ${{ env.WORKING_DIR }}
-        
-      - name: Terraform workspace select or create prod
-        run: terraform workspace select prod || terraform workspace new prod
-        working-directory: ${{ env.WORKING_DIR }}
-      
-      - name: Terraform apply prod
+
+      - name: Terraform apply for Production
         run: terraform apply -auto-approve -var-file=terraform.prod.tfvars
         working-directory: ${{ env.WORKING_DIR }}

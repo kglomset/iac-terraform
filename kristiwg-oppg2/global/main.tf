@@ -14,7 +14,7 @@ locals {
   vn_name           = terraform.workspace == "default" ? "${var.vn_name}" : "${var.vn_name}-${local.workspaces_suffix}"
   subnet_name       = terraform.workspace == "default" ? "${var.subnet_name}" : "${var.subnet_name}-${local.workspaces_suffix}"
   lb_name           = terraform.workspace == "default" ? "${var.lb_name}" : "${var.lb_name}-${local.workspaces_suffix}"
-  ip_name        = terraform.workspace == "default" ? "${var.ip_name}" : "${var.ip_name}-${local.workspaces_suffix}"
+  ip_name           = terraform.workspace == "default" ? "${var.ip_name}" : "${var.ip_name}-${local.workspaces_suffix}"
   service_plan_name = terraform.workspace == "default" ? "${var.service_plan_name}" : "${var.service_plan_name}-${local.workspaces_suffix}"
   server_name       = terraform.workspace == "default" ? "${var.server_name}" : "${var.server_name}-${local.workspaces_suffix}"
   db_name           = terraform.workspace == "default" ? "${var.db_name}" : "${var.db_name}-${local.workspaces_suffix}"
