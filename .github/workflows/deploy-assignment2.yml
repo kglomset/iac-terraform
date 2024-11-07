@@ -54,6 +54,9 @@ jobs:
         run: terraform workspace select staging || terraform workspace new staging
         working-directory: ${{ env.WORKING_DIR }}
 
+      - name: Terraform plan
+        run: terraform plan -out="main.tfplan" -var-file="terraform.staging.tfvars"
+
       - name: Terraform apply for Staging
         run: terraform apply -auto-approve
         working-directory: ${{ env.WORKING_DIR }}
