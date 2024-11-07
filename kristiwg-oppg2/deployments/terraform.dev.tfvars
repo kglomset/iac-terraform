@@ -13,8 +13,8 @@ subnet_name = "snet-operaterra-ecom"
 service_plan_name = "asp-operaterra-ecom"
 db_name = "sqldb-operaterra-ecom"
 server_name = "sql-operaterra-ecom"
-server_admin_pwd = "Hijqb90!"
-server_admin_username = "sqladmin"
+server_admin_pwd = "s3rvrpWd"
+server_admin_username = "sqladm!n"
 
 # Storage and service accounts
 sb_name = "sb-operaterra-ecom"
@@ -23,8 +23,8 @@ sc_name = "sc-operaterra-ecom"
 
 # VMSS configuration
 vmss_name = "vmss-operaterra-ecom"
-vmss_admin_password = "Hijqb90!"
-vmss_admin_username = "kristiwg"
+vmss_admin_password = "5ecur3pwd!"
+vmss_admin_username = "adm!n!5tr4t0r"
 vmss_sku = "Standard_B2ms"
 vmss_nic = "ot-ecom-nic"
 vmss_nic_ip_config = "vmss-interal-ip-config"
