@@ -33,6 +33,10 @@ jobs:
         run: terraform workspace select dev || terraform workspace new dev
         working-directory: ${{ env.WORKING_DIR }}
 
+      - name: Terraform plan for Dev
+        run: terraform plan
+        working-directory: ${{ env.WORKING_DIR }}
+
       - name: Terraform apply for Dev
         run: terraform apply -auto-approve
         working-directory: ${{ env.WORKING_DIR }}
@@ -54,8 +58,9 @@ jobs:
         run: terraform workspace select staging || terraform workspace new staging
         working-directory: ${{ env.WORKING_DIR }}
 
-      - name: Terraform plan
+      - name: Terraform plan for Staging
         run: terraform plan
+        working-directory: ${{ env.WORKING_DIR }}
 
       - name: Terraform apply for Staging
         run: terraform apply -auto-approve
@@ -86,6 +91,10 @@ jobs:
           minimum-approvals: 1
           issue-title: "Approval required for Production Deployment"
           issue-body: "Please review and approve the changes for production deployment."
+
+      - name: Terraform plan for Production
+        run: terraform plan
+        working-directory: ${{ env.WORKING_DIR }}
 
       - name: Terraform apply for Production
         run: terraform apply -auto-approve
