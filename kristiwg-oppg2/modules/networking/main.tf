@@ -1,3 +1,6 @@
+# This resource block defines network related infrastructure, such as security group, virtual network, 
+# subnet, public IP and load balancer.
+
 resource "azurerm_network_security_group" "ecom_sgroup" {
   name                = var.sg_name
   location            = var.location
@@ -36,4 +39,24 @@ resource "azurerm_lb" "ecom_lb" {
     name                 = "PublicIPAddress"
     public_ip_address_id = azurerm_public_ip.ecom_pub_ip.id
   }
+}
+
+resource "azurerm_lb_probe" "lb_http_probe" {
+  loadbalancer_id     = azurerm_lb.ecom_lb.id
+  name                = "http-running-probe"
+  protocol            = "Http"
+  port                = 80
+  request_path        = "/"
+  interval_in_seconds = 5
+  number_of_probes    = 2
+}
+
+resource "azurerm_lb_rule" "lb_http_rule" {
+  loadbalancer_id                = azurerm_lb.ecom_lb.id
+  name                           = "http-rule"
+  protocol                       = "Tcp"
+  frontend_port                  = 80
+  backend_port                   = 80
+  frontend_ip_configuration_name = "PublicIPAddress"
+  probe_id                       = azurerm_lb_probe.lb_http_probe.id
 }

@@ -1,3 +1,5 @@
+# Resource block that defines SQL server, database and server auditing policy
+
 resource "azurerm_mssql_server" "ecom_mysql_server" {
   name                         = var.server_name
   resource_group_name          = var.rg_name

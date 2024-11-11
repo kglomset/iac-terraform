@@ -1,3 +1,6 @@
+# Resource block that defines storage container, storage account, storage blob and a suffix for 
+# keeping storage account universally unique
+
 resource "random_string" "sa_suffix" {
   length  = 10
   special = false

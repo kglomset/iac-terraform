@@ -1,3 +1,5 @@
+# Serævice plan for the OT ecom application
+
 resource "azurerm_service_plan" "ecom_service_plan" {
   name                = var.service_plan_name
   resource_group_name = var.rg_name

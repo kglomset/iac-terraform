@@ -1,3 +1,5 @@
+# Resource block that defines resource group and variables stored in locals for naming
+
 resource "azurerm_resource_group" "rg_ecom_platform" {
   name     = local.rg_name
   location = var.location
