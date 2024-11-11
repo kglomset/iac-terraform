@@ -30,6 +30,7 @@ You also need to change the subscription_id in the provider block to your specif
         features {}
    }   
 ```
+You will also need to authenticate your account and initialize the backend using `terraform init` before pushing the files to remote repository. 
 
 ### Branches
 When uploading the files to a repository to test workflows, you need to create three branches: dev, staging and prod. These are required in order to have the pipeline working
